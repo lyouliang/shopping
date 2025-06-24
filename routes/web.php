@@ -8,7 +8,11 @@ use App\Http\Controllers\ShopController;
 
 Route::get('/', [ShopController::class, 'login']);
 
-Route::get('shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('shop', [ShopController::class, 'index'])->middleware(['auth'])->name('shop.index');
+
+Route::post('cart', [CartController::class, 'createcart'])->name('cart.create');
+
+Route::get('cart', [CartController::class, 'cartIndex'])->name('cart.get');
 
 Route::get('login', [ShopController::class, 'login']);
 
@@ -24,5 +28,5 @@ Route::get('register', [ShopController::class, 'register']);
 
 // Route::get('/cart', [CartController::class, 'show']);
 
-//require __DIR__.'/settings.php';
-//require __DIR__.'/auth.php';
+// require __DIR__.'/settings.php';
+// require __DIR__.'/auth.php';
