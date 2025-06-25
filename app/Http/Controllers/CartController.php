@@ -43,16 +43,18 @@ class CartController extends Controller
         ]);
 
         $cart = $this->getCart($request);
-        $cartId = $cart->id;
-        $productId = $request->product_id;
-        $product = Product::find($productId);
-        $quantity = $request->quantity;
-        $newQuantity = $quantity += 1;
+        $product = Product::find($request->product_id);
+        $existingItem = CartItem::where('cart_id', $cart->id)
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        // Calculate total quantity (existing + new)
+        $newQuantity = $existingItem ? $existingItem->quantity + $request->quantity : $request->quantity;
+
         $cartItem = CartItem::updateOrCreate([
-            'product_id' => $productId,
-            'cart_id' => $cartId,
+            'product_id' => $product->id,
+            'cart_id' => $cart->id,
         ], ['quantity' => $newQuantity]);
-        //dd($cartId, $product, $quantity, $cartItem);
 
         return Inertia::render('shop/Index', [
             'products' => Product::all(),

@@ -1,4 +1,3 @@
-<!-- resources/js/Components/CartSheet.vue -->
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
@@ -60,16 +59,7 @@ const totalPrice = computed(() => {
           />
           <div class="flex-grow">
             <p class="text-sm font-medium">{{ item.product.name }}</p>
-            <p class="text-sm text-gray-500">${{ item.product.price }} x</p>
-            <form @submit.prevent="updateQuantity(item.id)" class="flex items-center">
-              <!-- <input
-                v-model.number="updateForms[item.id].quantity"
-                type="number"
-                min="1"
-                class="w-16 p-1 border rounded"
-              /> -->
-              <button type="submit" class="ml-2 text-sm text-blue-500 hover:underline">Update</button>
-            </form>
+            <p class="text-sm text-gray-500">${{ item.product.price }} x {{ item.quantity }}</p>
             <p class="text-sm font-bold">${{ (item.quantity * item.product.price).toFixed(2) }}</p>
             <button
               @click="removeItem(item.id)"
@@ -83,10 +73,10 @@ const totalPrice = computed(() => {
       <div class="border-t pt-4">
         <p class="text-lg font-bold">Total: ${{ totalPrice.toFixed(2) }}</p>
         <a
-          :href="route('cart.index')"
+          :href="route('payment.index')"
           class="block text-center bg-gray-800 text-white py-2 rounded mt-4 hover:bg-gray-700"
         >
-          View Cart
+          Checkout
         </a>
       </div>
     </div>
