@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CartItem extends Model
 {
+    protected $fillable = ['product_id', 'cart_id', 'quantity'];
     public function cart(): BelongsTo
     {
         return $this->belongsTo(Cart::class);

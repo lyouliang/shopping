@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1>Shopping Cart ({{ itemCount }} items)</h1>
-    <p v-if="$page.props.flash.error" class="error">{{ $page.props.flash.error }}</p>
     <div v-if="cart.items.length === 0">Your cart is empty</div>
     <ul v-else>
       <li v-for="item in cart.items" :key="item.id">

@@ -14,7 +14,7 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $cart = $this->getCart($request);
-        return Inertia::render('Cart/Index', [
+        return Inertia::render('cart/Index', [
             'cart' => $cart->load('items.product')
         ]);
     }
