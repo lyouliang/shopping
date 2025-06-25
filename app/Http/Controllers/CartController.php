@@ -59,6 +59,7 @@ class CartController extends Controller
         return Inertia::render('shop/Index', [
             'products' => Product::all(),
             'cart' => $cart->fresh()->load('items.product'),
+            'filters' => ['search' => $request->input('search', '')],
             'flash' => ['success' => 'Item added to cart'],
         ]);
     }

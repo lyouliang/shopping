@@ -1,3 +1,4 @@
+<!-- resources/js/Components/CartSheet.vue -->
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
@@ -60,6 +61,15 @@ const totalPrice = computed(() => {
           <div class="flex-grow">
             <p class="text-sm font-medium">{{ item.product.name }}</p>
             <p class="text-sm text-gray-500">${{ item.product.price }} x {{ item.quantity }}</p>
+            <!-- <form @submit.prevent="updateQuantity(item.id)" class="flex items-center">
+              <input
+                v-model.number="updateForms[item.id].quantity"
+                type="number"
+                min="1"
+                class="w-16 p-1 border rounded"
+              />
+              <button type="submit" class="ml-2 text-sm text-blue-500 hover:underline">Update</button>
+            </form> -->
             <p class="text-sm font-bold">${{ (item.quantity * item.product.price).toFixed(2) }}</p>
             <button
               @click="removeItem(item.id)"
