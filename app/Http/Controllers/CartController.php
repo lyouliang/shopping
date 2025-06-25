@@ -7,13 +7,16 @@ use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
-    public function cartIndex(Request $request)
+    public function index(Request $request)
     {
         $cart = $this->getCart($request);
-        return response()->json($cart->load('items.product'));
+        return Inertia::render('Cart/Index', [
+            'cart' => $cart->load('items.product')
+        ]);
     }
 
     private function getCart(Request $request)
@@ -30,8 +33,13 @@ class CartController extends Controller
         }
     }
 
-    public function addToCart(Request $request)
+    public function add(Request $request)
     {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
         $cart = $this->getCart($request);
         $cartId = $cart->id;
         $productId = $request->product_id;
@@ -41,6 +49,24 @@ class CartController extends Controller
             'product_id' => $productId,
             'cart_id' => $cartId,
         ], ['quantity' => $quantity]);
-        return response()->json($cart->load('items.product'));
+        return redirect()->route('cart.index');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate(['quantity' => 'required|integer|min:1']);
+        $cart = $this->getCart($request);
+        $cartItem = CartItem::where('cart_id', $cart->id)->findOrFail($id);
+
+        $cartItem->update(['quantity' => $request->quantity]);
+        return redirect()->route('cart.index');
+    }
+
+    public function remove(Request $request, $id)
+    {
+        $cart = $this->getCart($request);
+        $cartItem = CartItem::where('cart_id', $cart->id)->findOrFail($id);
+        $cartItem->delete();
+        return redirect()->route('cart.index');
     }
 }
