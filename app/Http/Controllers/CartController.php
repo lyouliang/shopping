@@ -7,6 +7,8 @@ use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class CartController extends Controller
@@ -45,11 +47,18 @@ class CartController extends Controller
         $productId = $request->product_id;
         $product = Product::find($productId);
         $quantity = $request->quantity;
+        $newQuantity = $quantity += 1;
         $cartItem = CartItem::updateOrCreate([
             'product_id' => $productId,
             'cart_id' => $cartId,
-        ], ['quantity' => $quantity]);
-        return redirect()->route('cart.index');
+        ], ['quantity' => $newQuantity]);
+        //dd($cartId, $product, $quantity, $cartItem);
+
+        return Inertia::render('shop/Index', [
+            'products' => Product::all(),
+            'cart' => $cart->fresh()->load('items.product'),
+            'flash' => ['success' => 'Item added to cart'],
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -59,7 +68,11 @@ class CartController extends Controller
         $cartItem = CartItem::where('cart_id', $cart->id)->findOrFail($id);
 
         $cartItem->update(['quantity' => $request->quantity]);
-        return redirect()->route('cart.index');
+        return Inertia::render('shop/Index', [
+            'products' => Product::all(),
+            'cart' => $cart->fresh()->load('items.product'),
+            'flash' => ['success' => 'Quantity updates'],
+        ]);
     }
 
     public function remove(Request $request, $id)
@@ -67,6 +80,10 @@ class CartController extends Controller
         $cart = $this->getCart($request);
         $cartItem = CartItem::where('cart_id', $cart->id)->findOrFail($id);
         $cartItem->delete();
-        return redirect()->route('cart.index');
+        return Inertia::render('shop/Index', [
+            'products' => Product::all(),
+            'cart' => $cart->fresh()->load('items.product'),
+            'flash' => ['success' => 'Item removed'],
+        ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 /**
  * 
@@ -28,5 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Product extends Model
 {
-    //
+    protected $fillable = ['name', 'price', 'stock', 'image_path'];
+
+    public function getImagePathAttribute($value) {
+        return Storage::url('images') . '/' . ltrim($value) . ".png";
+    }
 }
